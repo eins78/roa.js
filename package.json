@@ -1,6 +1,6 @@
 {
   "name": "roa",
-  "version": "0.0.1-protype.0",
+  "version": "0.0.1-protype.1",
   "description": "prototype JSON-ROA client for node/io.js",
   "main": "roa.coffee",
   "scripts": {
