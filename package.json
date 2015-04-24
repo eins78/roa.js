@@ -1,0 +1,35 @@
+{
+  "name": "roa",
+  "version": "0.0.1-protype.0",
+  "description": "prototype JSON-ROA client for node/io.js",
+  "main": "roa.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eins78/roa.js.git"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "json",
+    "json-roa",
+    "resources",
+    "relations"
+  ],
+  "author": "Max Albrecht <1@178.is>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/eins78/roa.js/issues"
+  },
+  "homepage": "https://github.com/eins78/roa.js",
+  "devDependencies": {
+    "coffee-script": "^1.9.2"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "lodash": "^3.7.0",
+    "request": "^2.55.0"
+  }
+}
