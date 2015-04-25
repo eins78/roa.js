@@ -45,10 +45,11 @@ module.exports = ROA=(roa_config)->
           roaCollectionRelations = getRoaRelations(roaCollection)
           roaResult = merge({}, roaResult, roaCollectionRelations)
           # > Any of the following two conditions signals the end of the collection for a client:
-          # > TODO: - The relations object is empty.
+          # > - The relations object is empty.
           # > - There is no next key.
           nextPage = getRoaNext(roaCollection)
-          currentPage = nextPage
+          finished = true if isEmpty(nextPage?) or isEmpty(roaCollectionRelations)
+          currentPage = unless finished then nextPage else null
           next(err || null) # no need to return res since we are merging ourselves
       ,
       fin= (err)->

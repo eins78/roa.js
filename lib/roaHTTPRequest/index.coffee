@@ -4,7 +4,6 @@ http_request = require('request')
 buildLink = require('./buildLink')
 isString = require('lodash/lang/isString')
 isObject = require('lodash/lang/isObject')
-merge = require('lodash/object/merge')
 
 module.exports = RoaHTTPRequest=(config)->
   roaHTTPRequest=(opts, callback)->
@@ -20,7 +19,7 @@ module.exports = RoaHTTPRequest=(config)->
       headers:
         'Accept': 'application/json-roa+json'
         'User-Agent': 'ROA★JS'
-      auth: merge({}, config.auth, { sendImmediately: false })
+      auth: config.auth unless isEmpty(cfg.auth)
     )(
       opts,
       (err, res, httpStatus)->
