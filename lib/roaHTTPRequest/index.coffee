@@ -34,3 +34,5 @@ debug=(message, objects)->
   # (stolen from/compatible with `request` module )
   doDebug = process?.env?.NODE_DEBUG && /roajs\b/.test(process.env.NODE_DEBUG)
   if doDebug then console.log(message, objects) else null
+  if (doDebug = process?.env?.NODE_DEBUG && /roajs\b/.test(process.env.NODE_DEBUG))
+    console.log(message, formatJSON(object))
