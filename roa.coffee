@@ -2,7 +2,8 @@ async = require('async')
 # lodash: optimized imports below, enable full for dev
 f = require('lodash')
 isString = require('lodash/lang/isString')
-# isObject = require('lodash/lang/isObject')
+isEmpty = require('lodash/lang/isEmpty')
+isFunction = require('lodash/lang/isFunction')
 merge = require('lodash/object/merge')
 # helpers
 color=(colorName, string)->
@@ -17,7 +18,8 @@ module.exports = ROA=(roa_config)->
   roaHTTPRequest = require('./lib/roaHTTPRequest')(config)
 
   roaExpandCollection=(roaCollection, callback)->
-    return callback(null, roaCollection) if f.isEmpty(roaCollection)
+    if isEmpty(roaCollection)
+      return (callback(null, roaCollection) if isFunction(callback))
     async.map f.keys(roaCollection)
       , (key, cb)->
         item = roaCollection[key]

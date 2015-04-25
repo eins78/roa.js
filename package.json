@@ -1,12 +1,13 @@
 {
   "name": "roa",
-  "version": "0.0.1-protype.2",
+  "version": "0.0.1-protype.3",
   "description": "prototype JSON-ROA client for node/io.js",
   "main": "roa.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build",
-    "build": "coffee -b -c {.,lib/}**/*.coffee"
+    "build": "coffee -b -c {roa,lib/**/}*.coffee",
+    "demo": "npm run -s prepublish && time coffee demo.coffee"
   },
   "repository": {
     "type": "git",
