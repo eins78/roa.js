@@ -9,6 +9,57 @@ merge = require('lodash/object/merge')
 color=(colorName, string)->
   if doFancy then string.call(colorName) else string
 
+# ---
+
+# The "Roa" part of an API response is embedded in this property:
+roaProperty='_json-roa'
+getRoa=(obj)-> obj?[roaProperty]
+# - `collection` prop
+getBody=(obj)-> if obj? then f.omit(obj, roaProperty)
+getRoaCollection=(roa)-> roa?['collection']
+# - `self-relation` prop
+getRoaSelf=(roa)-> roa?['self-relation']
+# - `href` prop
+getRoaHref=(roa)-> roa?['href']
+# - `next` prop
+getRoaNext=(roa)-> roa?['next']
+# - `relations` prop
+getRoaRelations=(roa)-> roa?['relations']
+getRoaMethods=(roa)-> roa?['methods']
+# - a `RoaItem` is any object with `href` of type string + optional `query`:
+getRoaItem=(obj)-> (obj if isString(obj?['href']))
+
+makeRoaResource=(obj)->
+  roa_data = getRoa(obj)
+  unless roa_data?
+    obj
+  else
+    {
+      roa: parseRoaObject(roa_data)
+      body: getBody(obj)
+    }
+
+
+parseRoaObject=(roa)->
+  self = getRoaSelf(roa)
+  relations = getRoaRelations(roa)
+  methods = getRoaMethods(roa)
+
+  res = f.pick(roa, 'name')
+
+  res.href = getRoaHref(roa) or getRoaHref(self)
+
+  if self?
+    res.self = parseRoaObject(self) if self?
+
+  if relations?
+    res.relations = f(relations)
+      .map((item, key)-> [key, parseRoaObject(item)])
+      .zipObject().value()
+  res
+
+
+# ---
 
 # exports:
 module.exports = ROA=(roa_config)->
@@ -20,8 +71,8 @@ module.exports = ROA=(roa_config)->
   roaExpandCollection=(roaCollection, callback)->
     if isEmpty(roaCollection)
       return (callback(null, roaCollection) if isFunction(callback))
-    async.map f.keys(roaCollection)
-      , (key, cb)->
+    async.map f.keys(roaCollection),
+      (key, cb)->
         item = roaCollection[key]
         # return item if not a RoaItem
         return cb(null, item) unless getRoaItem(item)?
@@ -36,8 +87,12 @@ module.exports = ROA=(roa_config)->
         # callback(err, f.zipObject[results])
 
   # module returns this object:
-  getCollection: roaRequest=(roa, callback)->
-    # paginated, runs at least once and as long as they are 'next' links
+  get: (roa, callback)->
+    roaHTTPRequest getRoaItem(roa), (err, res)->
+      callback(err, makeRoaResource(res))
+
+  getCollection: (roa, callback)->
+    # paginated / crawls the whole collection(!) until there are no more items
     roaResult = {}
     currentPage = getRoaItem(roa)
     async.whilst (-> currentPage?),
@@ -57,17 +112,3 @@ module.exports = ROA=(roa_config)->
       fin= (err)->
         return callback(err) if err?
         roaExpandCollection roaResult, callback
-
-# ---
-
-# The "Roa" part of an API response is embedded in this property:
-roaProperty='_json-roa'
-getRoa=(obj)-> obj?[roaProperty]
-# - `collection` prop
-getRoaCollection=(roa)-> roa?['collection']
-# - `next` prop
-getRoaNext=(roa)-> roa?['next']
-# - `relations` prop
-getRoaRelations=(roa)-> roa?['relations']
-# - a `RoaItem` is any object with `href` of type string + optional `query`:
-getRoaItem=(obj)-> (obj if isString(obj?['href']))
