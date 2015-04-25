@@ -1,3 +1,5 @@
+f = require('lodash')
+format = require('./lib/formatJSON')
 Roa = require('./roa.coffee')
 
 roa = Roa({
@@ -9,4 +11,8 @@ roa = Roa({
 })
 
 
-roa.getCollection({ href: 'messages/' }, (err, res)-> console.log(err || res))
+roa.getCollection { href: 'messages/' }
+  ,
+  (err, res)->
+    list = res?.map? (item)-> f.omit(item, '_json-roa')
+    console.log(format(err || list || res))
