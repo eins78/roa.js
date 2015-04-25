@@ -4,10 +4,10 @@
   "description": "prototype JSON-ROA client for node/io.js",
   "main": "roa.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run build",
+    "test": "npm run demo",
+    "prepublish": "npm run test",
     "build": "coffee -b -c {roa,lib/**/}*.coffee",
-    "demo": "npm run -s prepublish && time coffee demo.coffee"
+    "demo": "npm run -s build && time coffee examples/mailbox.coffee"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,10 @@
   },
   "homepage": "https://github.com/eins78/roa.js",
   "devDependencies": {
-    "coffee-script": "^1.9.2"
+    "cli-color": "^1.0.0",
+    "coffee-script": "^1.9.2",
+    "moment": "^2.10.2",
+    "supports-color": "^1.3.1"
   },
   "dependencies": {
     "async": "^0.9.0",

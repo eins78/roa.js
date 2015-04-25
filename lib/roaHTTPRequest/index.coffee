@@ -28,7 +28,7 @@ module.exports = RoaHTTPRequest=(config)->
       opts,
       (err, res, httpStatus)->
         res = res?.body
-        debug("ROA_REQUEST http res #{httpStatus} ", err || res)
+        debug("ROA_REQUEST http done #{httpStatus} ", err || res)
         callback(err, res)
     )
 
